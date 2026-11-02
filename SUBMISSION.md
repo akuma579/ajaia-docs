@@ -8,6 +8,7 @@
 - **AI_WORKFLOW.md** — AI tools used, what was changed/rejected, verification approach
 - **SUBMISSION.md** — This file
 - **Automated tests** — 5 passing tests in `__tests__/api/documents.test.ts`
+- **Live deployment** — https://ajaia-docs-seven-theta.vercel.app
 
 ## Working Features
 
@@ -20,17 +21,15 @@
 7. **Document deletion** — Owner-only, with confirmation dialog
 8. **File import** — Drag-and-drop or browse for `.txt` and `.md` files
 9. **Sharing** — Share via email with edit/view permissions, remove access
-10. **Persistence** — SQLite database, documents survive refresh
+10. **Persistence** — PostgreSQL database (Neon), documents survive refresh
 
 ## What's Incomplete
 
-- **Deployment** — No live URL yet (local-only). Would deploy to Vercel + Neon PostgreSQL.
 - **Walkthrough video** — Not recorded yet.
 
 ## What I'd Build Next (2-4 hours)
 
-1. Deploy to Vercel with PostgreSQL (Neon free tier)
-2. Real-time presence indicators (who's viewing)
+1. Real-time presence indicators (who's viewing)
 3. Export documents to Markdown and PDF
 4. Document version history
 5. `.docx` file import
