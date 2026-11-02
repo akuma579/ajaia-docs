@@ -39,11 +39,6 @@ export default function LoginContent() {
     router.push("/dashboard");
   }
 
-  function quickLogin(demoEmail: string) {
-    setEmail(demoEmail);
-    setPassword("password123");
-  }
-
   if (status === "loading") {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
@@ -125,7 +120,7 @@ export default function LoginContent() {
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
+                  placeholder="Email"
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50/50 transition-all placeholder:text-gray-400"
                   required
                 />
@@ -139,7 +134,7 @@ export default function LoginContent() {
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    placeholder="Enter your password"
+                    placeholder="Password"
                     className="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-50/50 transition-all placeholder:text-gray-400 pr-11"
                     required
                   />
@@ -180,31 +175,6 @@ export default function LoginContent() {
             </form>
           </div>
 
-          {/* Demo accounts */}
-          <div className="mt-6 bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-gray-100">
-            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Quick demo login</p>
-            <div className="grid grid-cols-3 gap-2">
-              {[
-                { name: "Alice", email: "alice@example.com", color: "bg-blue-500" },
-                { name: "Bob", email: "bob@example.com", color: "bg-emerald-500" },
-                { name: "Charlie", email: "charlie@example.com", color: "bg-violet-500" },
-              ].map((user) => (
-                <button
-                  key={user.email}
-                  onClick={() => quickLogin(user.email)}
-                  className="flex flex-col items-center gap-1.5 p-3 rounded-xl hover:bg-white hover:shadow-md transition-all group"
-                >
-                  <div className={`w-9 h-9 ${user.color} rounded-full flex items-center justify-center text-white font-bold text-sm shadow-sm`}>
-                    {user.name[0]}
-                  </div>
-                  <span className="text-xs font-medium text-gray-600 group-hover:text-gray-900">{user.name}</span>
-                </button>
-              ))}
-            </div>
-            <p className="text-xs text-gray-400 text-center mt-3">
-              Password: <span className="font-mono text-gray-500">password123</span>
-            </p>
-          </div>
         </div>
       </div>
     </div>
