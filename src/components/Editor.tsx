@@ -15,6 +15,10 @@ import {
   ListOrdered,
   Undo,
   Redo,
+  Quote,
+  Minus,
+  Code,
+  Save,
 } from "lucide-react";
 
 interface EditorProps {
@@ -28,24 +32,33 @@ function ToolbarButton({
   isActive,
   children,
   title,
+  disabled,
 }: {
   onClick: () => void;
   isActive?: boolean;
   children: React.ReactNode;
   title: string;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
       title={title}
-      className={`p-2 rounded hover:bg-gray-200 transition-colors ${
-        isActive ? "bg-gray-200 text-blue-600" : "text-gray-600"
-      }`}
+      disabled={disabled}
+      className={`p-1.5 rounded-lg transition-all ${
+        isActive
+          ? "bg-blue-100 text-blue-700 shadow-sm"
+          : "text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+      } ${disabled ? "opacity-30 cursor-not-allowed" : ""}`}
     >
       {children}
     </button>
   );
+}
+
+function Divider() {
+  return <div className="w-px h-5 bg-gray-200 mx-0.5" />;
 }
 
 export default function Editor({ content, onSave, readOnly }: EditorProps) {
@@ -63,7 +76,7 @@ export default function Editor({ content, onSave, readOnly }: EditorProps) {
     },
     editorProps: {
       attributes: {
-        class: "prose prose-lg max-w-none focus:outline-none min-h-[500px] px-8 py-6",
+        class: "prose prose-lg max-w-none focus:outline-none min-h-[500px] px-10 py-8",
       },
     },
   });
@@ -83,95 +96,124 @@ export default function Editor({ content, onSave, readOnly }: EditorProps) {
   if (!editor) return null;
 
   return (
-    <div className="border rounded-lg bg-white shadow-sm">
+    <div className="border border-gray-200/80 rounded-xl bg-white shadow-sm overflow-hidden">
       {!readOnly && (
-        <div className="flex items-center gap-1 px-3 py-2 border-b bg-gray-50 flex-wrap">
+        <div className="flex items-center gap-0.5 px-3 py-2 border-b border-gray-100 bg-gray-50/80 flex-wrap">
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBold().run()}
             isActive={editor.isActive("bold")}
             title="Bold (Ctrl+B)"
           >
-            <Bold size={18} />
+            <Bold size={16} strokeWidth={2.5} />
           </ToolbarButton>
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleItalic().run()}
             isActive={editor.isActive("italic")}
             title="Italic (Ctrl+I)"
           >
-            <Italic size={18} />
+            <Italic size={16} />
           </ToolbarButton>
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleUnderline().run()}
             isActive={editor.isActive("underline")}
             title="Underline (Ctrl+U)"
           >
-            <UnderlineIcon size={18} />
+            <UnderlineIcon size={16} />
+          </ToolbarButton>
+          <ToolbarButton
+            onClick={() => editor.chain().focus().toggleCode().run()}
+            isActive={editor.isActive("code")}
+            title="Inline Code"
+          >
+            <Code size={16} />
           </ToolbarButton>
 
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <Divider />
 
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
             isActive={editor.isActive("heading", { level: 1 })}
             title="Heading 1"
           >
-            <Heading1 size={18} />
+            <Heading1 size={16} />
           </ToolbarButton>
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
             isActive={editor.isActive("heading", { level: 2 })}
             title="Heading 2"
           >
-            <Heading2 size={18} />
+            <Heading2 size={16} />
           </ToolbarButton>
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
             isActive={editor.isActive("heading", { level: 3 })}
             title="Heading 3"
           >
-            <Heading3 size={18} />
+            <Heading3 size={16} />
           </ToolbarButton>
 
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <Divider />
 
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleBulletList().run()}
             isActive={editor.isActive("bulletList")}
             title="Bullet List"
           >
-            <List size={18} />
+            <List size={16} />
           </ToolbarButton>
           <ToolbarButton
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
             isActive={editor.isActive("orderedList")}
             title="Numbered List"
           >
-            <ListOrdered size={18} />
+            <ListOrdered size={16} />
+          </ToolbarButton>
+          <ToolbarButton
+            onClick={() => editor.chain().focus().toggleBlockquote().run()}
+            isActive={editor.isActive("blockquote")}
+            title="Blockquote"
+          >
+            <Quote size={16} />
+          </ToolbarButton>
+          <ToolbarButton
+            onClick={() => editor.chain().focus().setHorizontalRule().run()}
+            title="Horizontal Rule"
+          >
+            <Minus size={16} />
           </ToolbarButton>
 
-          <div className="w-px h-6 bg-gray-300 mx-1" />
+          <Divider />
 
           <ToolbarButton
             onClick={() => editor.chain().focus().undo().run()}
-            title="Undo"
+            disabled={!editor.can().undo()}
+            title="Undo (Ctrl+Z)"
           >
-            <Undo size={18} />
+            <Undo size={16} />
           </ToolbarButton>
           <ToolbarButton
             onClick={() => editor.chain().focus().redo().run()}
-            title="Redo"
+            disabled={!editor.can().redo()}
+            title="Redo (Ctrl+Shift+Z)"
           >
-            <Redo size={18} />
+            <Redo size={16} />
           </ToolbarButton>
 
           <div className="ml-auto">
             <button
               onClick={handleSaveNow}
-              className="px-4 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+              className="flex items-center gap-1.5 px-4 py-1.5 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-all font-medium shadow-sm active:scale-[0.97]"
             >
+              <Save size={14} />
               Save
             </button>
           </div>
+        </div>
+      )}
+      {readOnly && (
+        <div className="px-4 py-2 bg-amber-50 border-b border-amber-100 text-amber-700 text-xs font-medium flex items-center gap-1.5">
+          <svg viewBox="0 0 16 16" fill="currentColor" className="w-3.5 h-3.5"><path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2zm3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/></svg>
+          View-only — you can read but not edit this document
         </div>
       )}
       <EditorContent editor={editor} />
